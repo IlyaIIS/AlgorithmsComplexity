@@ -14,9 +14,10 @@ namespace AlgorithmsComplexity
     {
         class Program
         {
+            const int N = 10000;
             delegate void Function(int count);
             static Random rnd = new Random();
-            const int N = 20000;
+            static List<int> Numbers = new List<int>();
             static string Path = Directory.GetCurrentDirectory() + @"\results.csv";
             static void Main(string[] args)
             {
@@ -26,7 +27,7 @@ namespace AlgorithmsComplexity
                     long[] results = new long[5];
                     for (int j = 0; j < 5; j++)
                     {
-                        results[j] = GetTimeOfFunctionExecuting(Function1, i);
+                        results[j] = GetTimeOfFunctionExecuting(Function3, i);
                     }
                     WriteCSV(i, results.Sum() / 5);
                 }
@@ -42,6 +43,7 @@ namespace AlgorithmsComplexity
 
             static long GetTimeOfFunctionExecuting(Function function, int count)
             {
+                Numbers.Add(rnd.Next(int.MaxValue));
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
                 function(count);
@@ -65,18 +67,18 @@ namespace AlgorithmsComplexity
             static void Function2(int count)
             {
                 long sum = 0;
-                for (int i = 1; i <= count; i++)
+                for (int i = 0; i < Numbers.Count; i++)
                 {
-                    sum += i;
+                    sum += Numbers[i];
                 }
             }
 
             static void Function3(int count)
             {
                 long mult = 1;
-                for (int i = 1; i <= count; i++)
+                for (int i = 0; i < Numbers.Count; i++)
                 {
-                    mult *= i;
+                    mult *= Numbers[i];
                 }
             }
 
