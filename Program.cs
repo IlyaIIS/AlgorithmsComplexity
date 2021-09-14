@@ -15,6 +15,7 @@ namespace AlgorithmsComplexity
         class Program
         {
             const int N = 10000;
+            const int repeatNum = 5;
             delegate void Function(int count);
             static Random rnd = new Random();
             static List<int> Numbers = new List<int>();
@@ -22,15 +23,27 @@ namespace AlgorithmsComplexity
             static void Main(string[] args)
             {
                 File.Delete(Path);
-                for (int i = 1; i <= N; i++)
+                long[] results = new long[N];
+                for (int i = 0; i < N; i++)
+                    results[i] = GetTimeOfFunctionExecuting(Function3, i);
+                
+                for (int ii = 0; ii < repeatNum-1; ii++)
+                    for (int i = 0; i < N; i++)
+                        results[i] = Math.Min(results[i], GetTimeOfFunctionExecuting(Function3, i));
+                
+                for (int i = 0; i < N; i++)
+                    WriteCSV(i, results[i]);
+                /*for (int i = 1; i <= N; i++)
                 {
                     long[] results = new long[5];
                     for (int j = 0; j < 5; j++)
                     {
                         results[j] = GetTimeOfFunctionExecuting(Function3, i);
                     }
-                    WriteCSV(i, results.Sum() / 5);
-                }
+                    DeleteSurges(ref results);
+                    WriteCSV(i, results.Min());
+                }*/
+                File.Open(Path, FileMode.Open);
             }
 
 
@@ -92,13 +105,13 @@ namespace AlgorithmsComplexity
             {
                 for (int i = 0; i < list.Length - 1; i++)
                 {
-                    if ((list[i] - list[i + 1]) / list[i + 1] > 3)
+                    if ((list[i + 1] - list[i]) / list[i] > 3)
                         list[i + 1] = list[i];
                 }
 
                 int ii = list.Length - 1;
-                if ((list[ii + 1] - list[ii]) / list[ii] > 3)
-                    list[ii] = list[ii + 1];
+                if ((list[0] - list[1]) / list[1] > 3)
+                    list[0] = list[1];
             }
         }
     }
