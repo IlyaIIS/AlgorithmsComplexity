@@ -18,21 +18,37 @@ namespace AlgorithmsComplexity
             const int repeatNum = 5;
             delegate void Function(int count);
             static Random rnd = new Random();
-            static List<int> Numbers = new List<int>();
+            static List<int> Numbers = GetRndNumbesList(N);
             static string Path = Directory.GetCurrentDirectory() + @"\results.csv";
             static void Main(string[] args)
             {
+
                 File.Delete(Path);
-                long[] results = new long[N];
+
+                long[,] results = new long[N,5];
+
+                for (int ii = 0; ii < repeatNum - 1; ii++)
+                    for (int i = 0; i < N; i++)
+                        results[i,ii] = GetTimeOfFunctionExecuting(Function3, i);
+                for (int i = 0; i < N; i++)
+                {
+                    long medium = 0;
+                    DeleteSurges(i,ref results);
+                    for (int ii = 0; ii < 5; ii++)
+                        medium += results[i, ii];
+                    
+                    WriteCSV(i, medium/5);
+                }
+
+                /*long[] results = new long[N];
                 for (int i = 0; i < N; i++)
                     results[i] = GetTimeOfFunctionExecuting(Function3, i);
-                
                 for (int ii = 0; ii < repeatNum-1; ii++)
                     for (int i = 0; i < N; i++)
                         results[i] = Math.Min(results[i], GetTimeOfFunctionExecuting(Function3, i));
-                
                 for (int i = 0; i < N; i++)
-                    WriteCSV(i, results[i]);
+                    WriteCSV(i, results[i]);*/
+
                 /*for (int i = 1; i <= N; i++)
                 {
                     long[] results = new long[5];
@@ -41,9 +57,9 @@ namespace AlgorithmsComplexity
                         results[j] = GetTimeOfFunctionExecuting(Function3, i);
                     }
                     DeleteSurges(ref results);
-                    WriteCSV(i, results.Min());
+                    WriteCSV(i, results.Sum()/5);
                 }*/
-                File.Open(Path, FileMode.Open);
+
             }
 
 
@@ -56,7 +72,6 @@ namespace AlgorithmsComplexity
 
             static long GetTimeOfFunctionExecuting(Function function, int count)
             {
-                Numbers.Add(rnd.Next(int.MaxValue));
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
                 function(count);
@@ -80,7 +95,7 @@ namespace AlgorithmsComplexity
             static void Function2(int count)
             {
                 long sum = 0;
-                for (int i = 0; i < Numbers.Count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     sum += Numbers[i];
                 }
@@ -89,10 +104,39 @@ namespace AlgorithmsComplexity
             static void Function3(int count)
             {
                 long mult = 1;
-                for (int i = 0; i < Numbers.Count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     mult *= Numbers[i];
                 }
+            }
+
+            static void Function5(int count)
+            {
+                int[] subArray = new int[count];
+                Numbers.CopyTo(0, subArray,0,count);
+                
+
+                for (int ii = 0; ii < count-1; ii++)
+                    for (int i = 1; i < count; i++)
+                        if (subArray[i-1] > subArray[i])
+                        {
+                            int localNum = subArray[i - 1];
+                            subArray[i - 1] = subArray[i];
+                            subArray[i] = localNum;
+                        }
+            }
+
+            static void Function6(int count)
+            {
+                int[] subArray = new int[count];
+                Numbers.CopyTo(0, subArray, 0, count);
+
+                Qsort(subArray, 0, (int)(count / 2));
+            }
+
+            static void Qsort(int[] arr, int b, int e)
+            {
+                //быстрая сортировка
             }
 
             static List<int> AddRndElement(List<int> list)
@@ -112,6 +156,27 @@ namespace AlgorithmsComplexity
                 int ii = list.Length - 1;
                 if ((list[0] - list[1]) / list[1] > 3)
                     list[0] = list[1];
+            }
+            static void DeleteSurges(int pos, ref long[,] list)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if ((list[pos, i + 1] - list[pos, i]) / list[pos, i] > 3)
+                        list[pos, i + 1] = list[pos, i];
+                }
+
+                int ii = 4;
+                if ((list[pos, 0] - list[pos, 1]) / list[pos, 1] > 3)
+                    list[pos, 0] = list[pos, 1];
+            }
+
+            static List<int> GetRndNumbesList(int count)
+            {
+                List<int> output = new List<int>();
+                for (int i = 0; i < count; i++)
+                    output.Add(rnd.Next(int.MaxValue));
+
+                return output;
             }
         }
     }
