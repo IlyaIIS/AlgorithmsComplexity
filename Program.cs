@@ -14,7 +14,7 @@ namespace AlgorithmsComplexity
     {
         class Program
         {
-            const int N = 10000;
+            const int N = 1000;
             const int repeatNum = 5;
             delegate void Function(int count);
             static Random rnd = new Random();
@@ -29,7 +29,7 @@ namespace AlgorithmsComplexity
 
                 for (int ii = 0; ii < repeatNum - 1; ii++)
                     for (int i = 0; i < N; i++)
-                        results[i,ii] = GetTimeOfFunctionExecuting(Function3, i);
+                        results[i,ii] = GetTimeOfFunctionExecuting(Function6, i);
                 for (int i = 0; i < N; i++)
                 {
                     long medium = 0;
@@ -109,7 +109,12 @@ namespace AlgorithmsComplexity
                     mult *= Numbers[i];
                 }
             }
-
+            static void Function4(int count)
+            {
+                double sum = 0;
+                for (int i = 0; i < count; i++)
+                    sum += Numbers[i] * Math.Pow(1.5, i - 1);
+            }
             static void Function5(int count)
             {
                 int[] subArray = new int[count];
@@ -128,15 +133,35 @@ namespace AlgorithmsComplexity
 
             static void Function6(int count)
             {
-                int[] subArray = new int[count];
-                Numbers.CopyTo(0, subArray, 0, count);
+                if (count > 1)
+                {
+                    int[] subArray = new int[count];
+                    Numbers.CopyTo(0, subArray, 0, count);
 
-                Qsort(subArray, 0, (int)(count / 2));
+                    Qsort(subArray, 0, count - 1);
+                }
             }
 
-            static void Qsort(int[] arr, int b, int e)
+            static int[] Qsort(int[] arr, int a, int b)
             {
-                //быстрая сортировка
+                int lastB = b;
+                for(int i = a; i < b; i++)
+                {
+                    if (arr[i] > arr[b])
+                    {
+                        int temp = arr[b];
+                        arr[b] = arr[i];
+                        arr[i] = arr[b - 1];
+                        arr[b - 1] = temp;
+                        b--;
+                        i--;
+                    }
+                }
+                if(lastB - b != 0)
+                    arr = Qsort(arr, 0, b - 1);
+                if(lastB - b > 1)
+                    arr = Qsort(arr, b + 1, arr.Length - 1);
+                return arr;
             }
 
             static List<int> AddRndElement(List<int> list)
@@ -165,7 +190,6 @@ namespace AlgorithmsComplexity
                         list[pos, i + 1] = list[pos, i];
                 }
 
-                int ii = 4;
                 if ((list[pos, 0] - list[pos, 1]) / list[pos, 1] > 3)
                     list[pos, 0] = list[pos, 1];
             }
