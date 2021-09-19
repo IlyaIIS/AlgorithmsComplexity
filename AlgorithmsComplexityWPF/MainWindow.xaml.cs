@@ -21,7 +21,7 @@ namespace AlgorithmsComplexityWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        const int N = 1000;
+        const int N = 10000;
         const int repeatNum = 5;
         int[] nums = Logic.GetRndNumbesList(N);
         Point[] points = new Point[N];
@@ -30,14 +30,19 @@ namespace AlgorithmsComplexityWPF
         {
             InitializeComponent();
 
+            Execute(8, N, Brushes.Black, true);
+            Execute(9, N, Brushes.Blue, false);
+        }
 
+        void Execute(int funcNum, int N, Brush color, bool showAverage)
+        {
             long[][] results = new long[repeatNum][];
             for (int i = 0; i < repeatNum; i++)
             {
-                results[i] = Logic.GetExecutingTimeArray(5, nums, N);
+                results[i] = Logic.GetExecutingTimeArray(funcNum, nums, N);
             }
 
-            double xStep = Width / N;
+            double xStep = (Width * 0.98) / N;
             double maxValue = 0;
             for (int i = 0; i < N; i++)
             {
@@ -58,48 +63,52 @@ namespace AlgorithmsComplexityWPF
             }
 
 
-            double yStep = Height / (maxValue*1.2);
-            Draw(points, Brushes.Black, 1);
-            points = Smooth(points);
-            Draw(points, Brushes.Red, 3);
+            double yStep = Height / (maxValue * 1.2);
+            Draw(points, color, 1, yStep);
 
-            void Draw(Point[] points, Brush color, int thickness)
+            if (showAverage)
             {
-                for (int i = 1; i < points.Length; i++)
-                {
-                    Field.Children.Add(new Line()
-                    {
-                        X1 = points[i - 1].X,
-                        X2 = points[i].X,
-                        Y1 = -points[i - 1].Y * yStep + Height - 40,
-                        Y2 = -points[i].Y * yStep + Height - 40,
-                        StrokeThickness = thickness,
-                        Stroke = color
-                    });
-                }
+                points = Smooth(points, 50);
+                Draw(points, Brushes.Red, 3, yStep);
             }
+        }
 
-            static Point[] Smooth(Point[] results)
+        void Draw(Point[] points, Brush color, int thickness, double yStep )
+        {
+            for (int i = 1; i < points.Length; i++)
             {
-                int w = 50; //чем больше w, тем силнее сглаживание
-                Point[] smoothResults = new Point[results.Length];
-                for (int i = 0; i < results.Length; i++)
+                Field.Children.Add(new Line()
                 {
-                    double s = 0;
-                    int count = 0;
-                    for (int j = i - w; j <= i + w; j++)
+                    X1 = points[i - 1].X,
+                    X2 = points[i].X,
+                    Y1 = -points[i - 1].Y * yStep + Height - 40,
+                    Y2 = -points[i].Y * yStep + Height - 40,
+                    StrokeThickness = thickness,
+                    Stroke = color
+                });
+            }
+        }
+
+        static Point[] Smooth(Point[] results, int smtPower)
+        {
+            int w = smtPower; //чем больше w, тем силнее сглаживание
+            Point[] smoothResults = new Point[results.Length];
+            for (int i = 0; i < results.Length; i++)
+            {
+                double s = 0;
+                int count = 0;
+                for (int j = i - w; j <= i + w; j++)
+                {
+                    if (j > 0 && j < results.Length)
                     {
-                        if (j > 0 && j < results.Length)
-                        {
-                            s += results[j].Y;
-                            count++;
-                        }
+                        s += results[j].Y;
+                        count++;
                     }
-                    smoothResults[i].X = results[i].X;
-                    smoothResults[i].Y = s / count;
                 }
-                return smoothResults;
+                smoothResults[i].X = results[i].X;
+                smoothResults[i].Y = s / count;
             }
+            return smoothResults;
         }
     }
 }

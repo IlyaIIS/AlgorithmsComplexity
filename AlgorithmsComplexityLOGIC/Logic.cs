@@ -48,7 +48,7 @@ namespace AlgorithmsComplexityLOGIC
             {
 
             },
-            //0
+            //1
             (int[] array, int count) =>
             {
                 for (int i = 0; i < count; i++)
@@ -61,7 +61,7 @@ namespace AlgorithmsComplexityLOGIC
                     }
                 }
             },
-            //1
+            //2
             (int[] array, int count) =>
             {
                 long sum = 0;
@@ -70,7 +70,7 @@ namespace AlgorithmsComplexityLOGIC
                     sum += array[i];
                 }
             },
-            //2
+            //3
             (int[] array, int count) =>
             {
                 long mult = 1;
@@ -79,14 +79,14 @@ namespace AlgorithmsComplexityLOGIC
                     mult *= array[i];
                 }
             },
-            //3
+            //4
             (int[] array, int count) =>
             {
                 double sum = 0;
                 for (int i = 0; i < count; i++)
                     sum += array[i] * Math.Pow(1.5, i - 1);
             },
-            //4
+            //5 сортировка пузырьком
             (int[] array, int count) =>
             {
                 for (int ii = 0; ii < count - 1; ii++)
@@ -98,7 +98,7 @@ namespace AlgorithmsComplexityLOGIC
                             array[i] = localNum;
                         }
             },
-            //5
+            //6 быстрая сортировка
             (int[] array, int count) =>
             {
                 if (count > 1)
@@ -106,10 +106,66 @@ namespace AlgorithmsComplexityLOGIC
                     Qsort(array, 0, count - 1);
                 }
             },
-            //6
+            //7 ещё какая-то сортировка
             (int[] array, int count) =>
             {
 
+            },
+            //8 простой алгоритм возведение в степень
+            (int[] array, int count) =>
+            {
+                Pow(array[count],count);
+            },
+            //9 рекурсивный алгоритм возведения в степень
+            (int[] array, int count) =>
+            {
+                long x = 0;
+                int num = array[count];
+                if (count == 0)
+                {
+                    x = 1;
+                }
+                else if (count > 0)
+                {
+                    x = Pow(Pow(num, (int)(count/2)),2);
+                    x = num % 2 != 0 ? x*num : x;
+                }
+            },
+            //10 быстрый алгоритм возведения в степень
+            (int[] array, int count) =>
+            {
+                int num = array[count];
+                long x = array[count];
+                long c = x;
+                int k = count;
+
+                x = k % 2 == 1 ? x : 1;
+
+                do
+                {
+                    k = (int)(k/2);
+                    c = c*c;
+                    x = k % 2 == 1 ? x*c : x;
+                }while(k!=0);
+            },
+            //11 классический быстрый алгоритм возведения в степень
+            (int[] array, int count) =>
+            {
+                long x = 1;
+                long c = x;
+                int k = count;
+                while(k != 0)
+                {
+                    if (k % 2 == 1)
+                    {
+                        x *= c;
+                        k--;
+                    }else
+                    {
+                        c *= c;
+                        k = (int)(k/2);
+                    }
+                }
             },
         };
 
@@ -133,6 +189,24 @@ namespace AlgorithmsComplexityLOGIC
             if (lastB - b > 1)
                 arr = Qsort(arr, b + 1, arr.Length - 1);
             return arr;
+        }
+
+        static long Pow(long num, int degree)
+        {
+            long x = 1;
+            if (degree >= 0)
+            {
+                for (int i = 0; i < degree; i++)
+                {
+                    x *= num;
+                }
+            }
+            else
+            {
+                throw new Exception("Возведение в отрицательную степень не реализовано");
+            }
+
+            return x;
         }
 
         public static void DeleteSurges(ref long[] list)
