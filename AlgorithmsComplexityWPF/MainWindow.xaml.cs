@@ -30,8 +30,8 @@ namespace AlgorithmsComplexityWPF
         {
             InitializeComponent();
 
-            Execute(8, N, Brushes.Black, true);
-            Execute(9, N, Brushes.Blue, false);
+            Execute(12, N, Brushes.Black, true);
+            //Execute(9, N, Brushes.Blue, false);
         }
 
         void Execute(int funcNum, int N, Brush color, bool showAverage)

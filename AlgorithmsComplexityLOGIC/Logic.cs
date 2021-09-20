@@ -167,6 +167,15 @@ namespace AlgorithmsComplexityLOGIC
                     }
                 }
             },
+            //12 нахождение факториала
+            (int[] array, int count) =>
+            {
+                int x = 1;
+                for (int i = 2; i < count; i++)
+                {
+                    x *= i;
+			    }
+            }
         };
 
         static int[] Qsort(int[] arr, int a, int b)
