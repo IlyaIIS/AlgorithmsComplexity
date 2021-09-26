@@ -21,7 +21,7 @@ namespace AlgorithmsComplexityWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        const int N = 10000;
+        const int N = 500;
         const int repeatNum = 5;
         int[] nums = Logic.GetRndNumbesList(N);
         Point[] points = new Point[N];
@@ -30,8 +30,7 @@ namespace AlgorithmsComplexityWPF
         {
             InitializeComponent();
 
-            Execute(12, N, Brushes.Black, true);
-            //Execute(9, N, Brushes.Blue, false);
+            Execute(13, N, Brushes.Blue, true);
         }
 
         void Execute(int funcNum, int N, Brush color, bool showAverage)
@@ -68,7 +67,8 @@ namespace AlgorithmsComplexityWPF
 
             if (showAverage)
             {
-                points = Smooth(points, 50);
+                Draw(Smooth(points, (int)(N / 10)), Brushes.Green, 3, yStep);
+                points = Smooth1(points);
                 Draw(points, Brushes.Red, 3, yStep);
             }
         }
@@ -89,9 +89,8 @@ namespace AlgorithmsComplexityWPF
             }
         }
 
-        static Point[] Smooth(Point[] results, int smtPower)
+        static Point[] Smooth(Point[] results, int w)
         {
-            int w = smtPower; //чем больше w, тем силнее сглаживание
             Point[] smoothResults = new Point[results.Length];
             for (int i = 0; i < results.Length; i++)
             {
@@ -109,6 +108,19 @@ namespace AlgorithmsComplexityWPF
                 smoothResults[i].Y = s / count;
             }
             return smoothResults;
+        }
+
+        static Point[] Smooth1(Point[] points)
+        {
+            for(int i = 0; i < 1000; i++)
+            {
+                for(int j = 1; j < points.Length - 1; j++)
+                {
+                    points[j].Y = (points[j - 1].Y + points[j + 1].Y) / 2;
+                }
+                points[^1].Y = (points[points.Length - 2].Y + points[^1].Y) / 2;
+            }
+            return points;
         }
     }
 }

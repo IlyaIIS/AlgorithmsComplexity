@@ -14,9 +14,9 @@ namespace AlgorithmsComplexityLOGIC
         {
             long[] result = new long[count];
 
-            Parallel.For(0, count, (int i) => result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i));
+            Parallel.For(1, count, (int i) => result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i));
 
-            //for (int i = 0; i < count; i++)
+            //for (int i = 1; i < count; i++)
             //    result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i);
 
             return result;
@@ -24,8 +24,8 @@ namespace AlgorithmsComplexityLOGIC
 
         static long GetTimeOfFunctionExecuting(Function function,int[] array, int count)
         {
-            int[] nums = new int[array.Length];
-            array.CopyTo(nums, 0);
+            int[] nums = new int[count];
+            Array.Copy(array, nums, count);
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -114,7 +114,7 @@ namespace AlgorithmsComplexityLOGIC
             //8 простой алгоритм возведение в степень
             (int[] array, int count) =>
             {
-                Pow(array[count],count);
+                Pow(array[count - 1],count);
             },
             //9 рекурсивный алгоритм возведения в степень
             (int[] array, int count) =>
@@ -134,8 +134,8 @@ namespace AlgorithmsComplexityLOGIC
             //10 быстрый алгоритм возведения в степень
             (int[] array, int count) =>
             {
-                int num = array[count];
-                long x = array[count];
+                int num = array[^1];
+                long x = array[^1];
                 long c = x;
                 int k = count;
 
@@ -144,7 +144,7 @@ namespace AlgorithmsComplexityLOGIC
                 do
                 {
                     k = (int)(k/2);
-                    c = c*c;
+                    c *= c;
                     x = k % 2 == 1 ? x*c : x;
                 }while(k!=0);
             },
@@ -175,6 +175,34 @@ namespace AlgorithmsComplexityLOGIC
                 {
                     x *= i;
 			    }
+            },
+            //13 перемножение матриц
+            (int[] array, int count) =>
+            {
+                var rnd = new Random();
+                var a = new int[count, count];
+                var b = new int[count, count];
+                var result = new int[count, count];
+                for(int i = 0; i < count; i++)
+                {
+                    for(int j = 0; j < count; j++)
+                    {
+                        a[i, j] = rnd.Next(1000);
+                        b[i, j] = rnd.Next(1000);
+                    }
+                }
+                for(int i =0; i < count; i++)
+                {
+                    for(int k = 0; k < count; k++)
+                    {
+                        int s = 0;
+                        for(int j = 0; j < count; j++)
+                        {
+                            s += a[i, j] * b[j, k];
+                        }
+                        result[i, k] = s;
+                    }
+                }
             }
         };
 
