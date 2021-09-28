@@ -21,7 +21,7 @@ namespace AlgorithmsComplexityWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        const int N = 12;
+        const int N = 20;
         const int repeatNum = 5;
         int[] nums = Logic.GetRndNumbesList(N);
         Point[] points = new Point[N];
@@ -30,7 +30,7 @@ namespace AlgorithmsComplexityWPF
         {
             InitializeComponent();
 
-            Execute(14, N, Brushes.Blue, true);
+            Execute(13, N, Brushes.Blue, true);
         }
 
         void Execute(int funcNum, int N, Brush color, bool showAverage)
@@ -38,7 +38,7 @@ namespace AlgorithmsComplexityWPF
             long[][] results = new long[repeatNum][];
             for (int i = 0; i < repeatNum; i++)
             {
-                results[i] = Logic.GetExecutingTimeArray(funcNum, nums, N);
+                results[i] = Logic.GetExecutingTimeArray(funcNum, nums, N, true);
             }
 
             double xStep = (Width * 0.98) / N;

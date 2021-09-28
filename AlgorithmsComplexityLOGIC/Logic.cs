@@ -10,15 +10,18 @@ namespace AlgorithmsComplexityLOGIC
     {
         delegate void Function(int[] array, int count);
         static Random rnd = new Random();
-        public static long[] GetExecutingTimeArray(int funcNum, int[] array, int count)
+        public static long[] GetExecutingTimeArray(int funcNum, int[] array, int count, bool isParallelActive)
         {
             long[] result = new long[count];
-
-            Parallel.For(1, count, (int i) => result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i));
-
-            //for (int i = 1; i < count; i++)
-            //    result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i);
-
+            if (isParallelActive)
+            {
+                Parallel.For(1, count, (int i) => result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i));
+            }
+            else
+            {
+                for (int i = 1; i < count; i++)
+                    result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i);
+            }
             return result;
         }
 
@@ -48,7 +51,7 @@ namespace AlgorithmsComplexityLOGIC
             {
 
             },
-            //1
+            //1 - 20000
             (int[] array, int count) =>
             {
                 for (int i = 0; i < count; i++)
@@ -61,7 +64,7 @@ namespace AlgorithmsComplexityLOGIC
                     }
                 }
             },
-            //2
+            //2 - 20000
             (int[] array, int count) =>
             {
                 long sum = 0;
@@ -70,7 +73,7 @@ namespace AlgorithmsComplexityLOGIC
                     sum += array[i];
                 }
             },
-            //3
+            //3 - 20000
             (int[] array, int count) =>
             {
                 long mult = 1;
@@ -79,14 +82,14 @@ namespace AlgorithmsComplexityLOGIC
                     mult *= array[i];
                 }
             },
-            //4
+            //4 - 10000
             (int[] array, int count) =>
             {
                 double sum = 0;
                 for (int i = 0; i < count; i++)
                     sum += array[i] * Math.Pow(1.5, i - 1);
             },
-            //5 сортировка пузырьком
+            //5 сортировка пузырьком - 2000
             (int[] array, int count) =>
             {
                 for (int ii = 0; ii < count - 1; ii++)
@@ -98,7 +101,7 @@ namespace AlgorithmsComplexityLOGIC
                             array[i] = localNum;
                         }
             },
-            //6 быстрая сортировка
+            //6 быстрая сортировка - 6000
             (int[] array, int count) =>
             {
                 if (count > 1)
@@ -106,32 +109,24 @@ namespace AlgorithmsComplexityLOGIC
                     Qsort(array, 0, count - 1);
                 }
             },
-            //7 ещё какая-то сортировка
+            //7 гибридный алгоритм сортировки - 2000
             (int[] array, int count) =>
             {
-
+                TimSortPacket.timSort(array, count);
             },
-            //8 простой алгоритм возведение в степень
+            //8 простой алгоритм возведение в степень - 20000
             (int[] array, int count) =>
             {
                 Pow(array[count - 1],count);
             },
-            //9 рекурсивный алгоритм возведения в степень
+            //9 рекурсивный алгоритм возведения в степень - 20000
             (int[] array, int count) =>
             {
                 long x = 0;
-                int num = array[count];
-                if (count == 0)
-                {
-                    x = 1;
-                }
-                else if (count > 0)
-                {
-                    x = Pow(Pow(num, (int)(count/2)),2);
-                    x = num % 2 != 0 ? x*num : x;
-                }
+                int num = array[^1];
+                x = RecPow(num,count);
             },
-            //10 быстрый алгоритм возведения в степень
+            //10 быстрый алгоритм возведения в степень - 20000
             (int[] array, int count) =>
             {
                 int num = array[^1];
@@ -148,7 +143,7 @@ namespace AlgorithmsComplexityLOGIC
                     x = k % 2 == 1 ? x*c : x;
                 }while(k!=0);
             },
-            //11 классический быстрый алгоритм возведения в степень
+            //11 классический быстрый алгоритм возведения в степень - 20000
             (int[] array, int count) =>
             {
                 long x = 1;
@@ -167,16 +162,7 @@ namespace AlgorithmsComplexityLOGIC
                     }
                 }
             },
-            //12 нахождение факториала
-            (int[] array, int count) =>
-            {
-                int x = 1;
-                for (int i = 2; i < count; i++)
-                {
-                    x *= i;
-			    }
-            },
-            //13 перемножение матриц
+            //12 перемножение матриц - 200
             (int[] array, int count) =>
             {
                 var rnd = new Random();
@@ -204,7 +190,12 @@ namespace AlgorithmsComplexityLOGIC
                     }
                 }
             },
-            //14 L-система
+            //13 Древовидный фрактал - 20
+            (int[] array, int count) =>
+            {
+                DoFractal(new PointD(0,0),Math.PI/2,count);
+            },
+            //14 L-система - 12
             (int[] array, int count) =>
             {
                 string condition1 = "LbFRAFARFbL";
@@ -280,6 +271,17 @@ namespace AlgorithmsComplexityLOGIC
                 list[0][pos] = list[1][pos];
         }
 
+        static long RecPow(long num, int degree)
+        {
+            long output = 1;
+            if (degree != 0)
+            {
+                output = RecPow(num, (int)(degree / 2));
+                output = num % 2 == 1 ? output * output * num : output * output;
+            }
+            return output;
+        }
+
         static string LGenerator(string input, string condition1, string condition2)
         {
             input = input.Replace("A", condition1);
@@ -292,6 +294,121 @@ namespace AlgorithmsComplexityLOGIC
         {
             input.Replace("A", string.Empty);
             return input.Replace("B", string.Empty);
+        }
+
+        static void DoFractal(PointD point, double angle, int deph)
+        {
+            for (int i = 0; i < FS.branchNum; i++)
+            {
+                double localAngle = angle - FS.angleDigression + FS.angleInc * i;
+                PointD localPoint = new PointD(point.X + Math.Cos(localAngle) * FS.length, point.Y - Math.Sin(localAngle) * FS.length);
+                //сохранение полученной точки
+                if (deph > 0)
+                {
+                    DoFractal(localPoint, localAngle, deph - 1);
+                }
+            }
+        }
+    }
+
+    struct PointD
+    {
+        public double X;
+        public double Y;
+        public PointD(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+
+    static class FS //FractalSettings
+    {
+        public static int branchNum = 2;
+        public static double angleDigression = Math.PI / (branchNum + 1);
+        public static double angleInc = Math.PI / (branchNum + 1);
+        public static double length = 30;
+    }
+
+    class TimSortPacket
+    {
+        public const int RUN = 32; //размер изначального куска массива
+
+        public static void insertionSort(int[] arr, int left, int right)
+        {
+            for (int i = left + 1; i <= right; i++)
+            {
+                int temp = arr[i];
+                int j = i - 1;
+                while (j >= left && arr[j] > temp)
+                {
+                    arr[j + 1] = arr[j];
+                    j--;
+                }
+                arr[j + 1] = temp;
+            }
+        }
+
+        public static void merge(int[] arr, int l, int m, int r)
+        {
+            int len1 = m - l + 1, len2 = r - m;
+            int[] left = new int[len1];
+            int[] right = new int[len2];
+            for (int x = 0; x < len1; x++)
+                left[x] = arr[l + x];
+            for (int x = 0; x < len2; x++)
+                right[x] = arr[m + 1 + x];
+
+            int i = 0;
+            int j = 0;
+            int k = l;
+
+            while (i < len1 && j < len2)
+            {
+                if (left[i] <= right[j])
+                {
+                    arr[k] = left[i];
+                    i++;
+                }
+                else
+                {
+                    arr[k] = right[j];
+                    j++;
+                }
+                k++;
+            }
+
+            while (i < len1)
+            {
+                arr[k] = left[i];
+                k++;
+                i++;
+            }
+
+            while (j < len2)
+            {
+                arr[k] = right[j];
+                k++;
+                j++;
+            }
+        }
+
+        public static void timSort(int[] arr, int n)
+        {
+            for (int i = 0; i < n; i += RUN)
+                insertionSort(arr, i, Math.Min((i + RUN - 1), (n - 1)));
+
+            for (int size = RUN; size < n; size = 2 * size)
+            {
+                for (int left = 0; left < n; left += 2 * size)
+                {
+                    int mid = left + size - 1;
+                    int right = Math.Min((left + 2 * size - 1), (n - 1));
+
+                    if (mid < right)
+                        merge(arr, left, mid, right);
+                }
+            }
         }
     }
 }
