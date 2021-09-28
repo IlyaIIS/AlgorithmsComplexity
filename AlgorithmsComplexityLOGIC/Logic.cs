@@ -203,6 +203,16 @@ namespace AlgorithmsComplexityLOGIC
                         result[i, k] = s;
                     }
                 }
+            },
+            //14 L-система
+            (int[] array, int count) =>
+            {
+                string condition1 = "LbFRAFARFbL";
+                string condition2 = "RAFLBFBLFAR";
+                string str = "A";
+                for (int i = 0; i<count; i++)
+                str = LGenerator(str, condition1, condition2);
+                str = DeleteConditions(str);
             }
         };
 
@@ -268,6 +278,20 @@ namespace AlgorithmsComplexityLOGIC
 
             if ((list[0][pos] - list[1][pos]) / list[1][pos] > 3)
                 list[0][pos] = list[1][pos];
+        }
+
+        static string LGenerator(string input, string condition1, string condition2)
+        {
+            input = input.Replace("A", condition1);
+            input = input.Replace("B", condition2);
+            input = input.Replace("b", "B");
+            return input;
+        }
+
+        static string DeleteConditions(string input)
+        {
+            input.Replace("A", string.Empty);
+            return input.Replace("B", string.Empty);
         }
     }
 }
