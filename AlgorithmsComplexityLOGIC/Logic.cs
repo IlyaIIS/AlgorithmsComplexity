@@ -58,11 +58,9 @@ namespace AlgorithmsComplexityLOGIC
                 for (int i = 0; i < count; i++)
                 {
                     int ii = 0;
-                    if (i * 2 * 2 * 2 * 2 * 2 == -1)
-                    {
-                        ii++;
-                        ii--;
-                    }
+
+                    ii++;
+                    ii--;
                 }
             },
             //2 - 20000

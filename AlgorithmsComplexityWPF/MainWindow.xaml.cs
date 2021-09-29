@@ -21,7 +21,7 @@ namespace AlgorithmsComplexityWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        const int N = 2000;                     //размер графика по оси Х
+        const int N = 20000;                     //размер графика по оси Х
         const int repeatNum = 5;                //количество повторений вычислений для среза выбросов
         int[] nums = Logic.GetRndNumbesList(N); //массив случайных чисел
         Point[] points = new Point[N];          //массив точек для отрисовки графика
@@ -30,7 +30,7 @@ namespace AlgorithmsComplexityWPF
         {
             InitializeComponent();
 
-            Execute(7, N, Brushes.Blue, true);
+            Execute(1, N, Brushes.Blue, true);
         }
 
         void Execute(int funcNum, int N, Brush color, bool showAverage)
