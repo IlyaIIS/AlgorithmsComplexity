@@ -47,6 +47,7 @@ namespace AlgorithmsComplexityLOGIC
 
         static List<Function> functions = new List<Function>()
         {
+            //<номер> <название> - <приемлемое количество итераций>
             (int[] array, int count) =>
             {
 
@@ -112,7 +113,7 @@ namespace AlgorithmsComplexityLOGIC
             //7 гибридный алгоритм сортировки - 2000
             (int[] array, int count) =>
             {
-                TimSortPacket.timSort(array, count);
+                TimSortPacket.timSort(ref array, count);
             },
             //8 простой алгоритм возведение в степень - 20000
             (int[] array, int count) =>
@@ -247,6 +248,7 @@ namespace AlgorithmsComplexityLOGIC
             return x;
         }
 
+        // способ удаления пик через соседние значения в массиве из вычислений для одного count
         public static void DeleteSurges(ref long[] list)
         {
             for (int i = 0; i < list.Length - 1; i++)
@@ -302,7 +304,7 @@ namespace AlgorithmsComplexityLOGIC
             {
                 double localAngle = angle - FS.angleDigression + FS.angleInc * i;
                 PointD localPoint = new PointD(point.X + Math.Cos(localAngle) * FS.length, point.Y - Math.Sin(localAngle) * FS.length);
-                //сохранение полученной точки
+                //сохранить полученный отрезок (от point до localPoint)
                 if (deph > 0)
                 {
                     DoFractal(localPoint, localAngle, deph - 1);
@@ -334,7 +336,7 @@ namespace AlgorithmsComplexityLOGIC
     {
         public const int RUN = 32; //размер изначального куска массива
 
-        public static void insertionSort(int[] arr, int left, int right)
+        public static void insertionSort(ref int[] arr, int left, int right)
         {
             for (int i = left + 1; i <= right; i++)
             {
@@ -349,7 +351,7 @@ namespace AlgorithmsComplexityLOGIC
             }
         }
 
-        public static void merge(int[] arr, int l, int m, int r)
+        public static void merge(ref int[] arr, int l, int m, int r)
         {
             int len1 = m - l + 1, len2 = r - m;
             int[] left = new int[len1];
@@ -393,10 +395,10 @@ namespace AlgorithmsComplexityLOGIC
             }
         }
 
-        public static void timSort(int[] arr, int n)
+        public static void timSort(ref int[] arr, int n)
         {
             for (int i = 0; i < n; i += RUN)
-                insertionSort(arr, i, Math.Min((i + RUN - 1), (n - 1)));
+                insertionSort(ref arr, i, Math.Min((i + RUN - 1), (n - 1)));
 
             for (int size = RUN; size < n; size = 2 * size)
             {
@@ -406,7 +408,7 @@ namespace AlgorithmsComplexityLOGIC
                     int right = Math.Min((left + 2 * size - 1), (n - 1));
 
                     if (mid < right)
-                        merge(arr, left, mid, right);
+                        merge(ref arr, left, mid, right);
                 }
             }
         }
