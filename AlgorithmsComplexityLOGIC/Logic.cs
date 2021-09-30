@@ -302,7 +302,7 @@ namespace AlgorithmsComplexityLOGIC
             {
                 double localAngle = angle - FS.angleDigression + FS.angleInc * i;
                 PointD localPoint = new PointD(point.X + Math.Cos(localAngle) * FS.length, point.Y - Math.Sin(localAngle) * FS.length);
-                //сохранить полученный отрезок (от point до localPoint)
+                //сохранить полученный отрезок (от point до localPoint) в глобальной переменной-массиве
                 if (deph > 0)
                 {
                     DoFractal(localPoint, localAngle, deph - 1);
