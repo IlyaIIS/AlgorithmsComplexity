@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Text;
 
 namespace AlgorithmsComplexityLOGIC
 {
@@ -111,7 +112,7 @@ namespace AlgorithmsComplexityLOGIC
             //7 гибридный алгоритм сортировки - 2000
             (int[] array, int count) =>
             {
-                TimSortPacket.timSort(ref array, count);
+                TimSortPacket.TimSort(ref array, count);
             },
             //8 простой алгоритм возведение в степень - 20000
             (int[] array, int count) =>
@@ -197,11 +198,11 @@ namespace AlgorithmsComplexityLOGIC
             //14 L-система - 12
             (int[] array, int count) =>
             {
-                string condition1 = "LbFRAFARFbL";
+                string condition1 = "LBFRAFARFBL";
                 string condition2 = "RAFLBFBLFAR";
                 string str = "A";
                 for (int i = 0; i<count; i++)
-                str = LGenerator(str, condition1, condition2);
+                    str = LGenerator(str, condition1, condition2);
                 str = DeleteConditions(str);
             }
         };
@@ -284,10 +285,21 @@ namespace AlgorithmsComplexityLOGIC
 
         static string LGenerator(string input, string condition1, string condition2)
         {
-            input = input.Replace("A", condition1);
-            input = input.Replace("B", condition2);
-            input = input.Replace("b", "B");
-            return input;
+            StringBuilder output = new StringBuilder(String.Empty);
+            foreach(var c in input)
+            {
+                if (c == 'A')
+                {
+                    output.Append(condition1);
+                }
+                else if (c == 'B')
+                {
+                    output.Append(condition2);
+                }
+                else
+                    output.Append(c);
+            }
+            return output.ToString();
         }
 
         static string DeleteConditions(string input)
@@ -301,8 +313,14 @@ namespace AlgorithmsComplexityLOGIC
             for (int i = 0; i < FS.branchNum; i++)
             {
                 double localAngle = angle - FS.angleDigression + FS.angleInc * i;
+<<<<<<< Updated upstream
                 PointD localPoint = new PointD(point.X + Math.Cos(localAngle) * FS.length, point.Y - Math.Sin(localAngle) * FS.length);
                 //сохранить полученный отрезок (от point до localPoint) в глобальной переменной-массиве
+=======
+                PointD localPoint = new PointD(point.X + Math.Cos(localAngle) * 
+                                    FS.length, point.Y - Math.Sin(localAngle) * FS.length);
+                //сохранить полученный отрезок (от point до localPoint)
+>>>>>>> Stashed changes
                 if (deph > 0)
                 {
                     DoFractal(localPoint, localAngle, deph - 1);
@@ -332,9 +350,9 @@ namespace AlgorithmsComplexityLOGIC
 
     class TimSortPacket
     {
-        public const int RUN = 32; //размер изначального куска массива
+        public const int Run = 32; //размер изначальной части массива (minrun)
 
-        public static void insertionSort(ref int[] arr, int left, int right)
+        public static void InsertionSort(ref int[] arr, int left, int right)
         {
             for (int i = left + 1; i <= right; i++)
             {
@@ -349,7 +367,7 @@ namespace AlgorithmsComplexityLOGIC
             }
         }
 
-        public static void merge(ref int[] arr, int l, int m, int r)
+        public static void Merge(ref int[] arr, int l, int m, int r)
         {
             int len1 = m - l + 1, len2 = r - m;
             int[] left = new int[len1];
@@ -393,12 +411,12 @@ namespace AlgorithmsComplexityLOGIC
             }
         }
 
-        public static void timSort(ref int[] arr, int n)
+        public static void TimSort(ref int[] arr, int n)
         {
-            for (int i = 0; i < n; i += RUN)
-                insertionSort(ref arr, i, Math.Min((i + RUN - 1), (n - 1)));
+            for (int i = 0; i < n; i += Run)
+                InsertionSort(ref arr, i, Math.Min((i + Run - 1), (n - 1)));
 
-            for (int size = RUN; size < n; size = 2 * size)
+            for (int size = Run; size < n; size = 2 * size)
             {
                 for (int left = 0; left < n; left += 2 * size)
                 {
@@ -406,7 +424,7 @@ namespace AlgorithmsComplexityLOGIC
                     int right = Math.Min((left + 2 * size - 1), (n - 1));
 
                     if (mid < right)
-                        merge(ref arr, left, mid, right);
+                        Merge(ref arr, left, mid, right);
                 }
             }
         }
