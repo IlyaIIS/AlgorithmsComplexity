@@ -2,25 +2,28 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Text;
 
 namespace AlgorithmsComplexityEXCEL
 {
     class Program
     {
         static string Path = Directory.GetCurrentDirectory() + @"\results.csv";
-        const int N = 100;                     //размер графика по оси Х 
-        const int repeatNum = 5;                //количество повторений вычислений для среза выбросов 
+        const int N = 20000;                     //размер графика по оси Х 
+        const int repeatNum = 5;                 //количество повторений вычислений для среза выбросов 
         static int[] nums = Logic.GetRndNumbesList(N); //массив случайных чисел 
-        static long[] resultX = new long[N];          //массив точек для отрисовки графика 
+        static long[] resultX = new long[N];           //массив точек для отрисовки графика 
+        static StringBuilder csv = new StringBuilder();
         static void Main(string[] args)
         {
-            Execute(3, N, true);
+            Execute(1, N, true);
 
             File.Delete(Path);
-            for (int i = 1; i <= N; i++)
+            for (int i = 0; i < N; i++)
             {
-                WriteCSV(i, resultX[i - 1]);
+                AddCSVLine(i+1, resultX[i]);
             }
+            File.AppendAllText(Path, csv.ToString());
             Console.WriteLine("ГОТОВО!");
         }
 
@@ -29,6 +32,8 @@ namespace AlgorithmsComplexityEXCEL
             long[][] results = new long[repeatNum][];
             for (int i = 0; i < repeatNum; i++)
             {
+                Console.SetCursorPosition(0, 0);
+                Console.WriteLine(i * 20 + "%");
                 results[i] = Logic.GetExecutingTimeArray(funcNum, nums, N, true);
             }
 
@@ -53,11 +58,9 @@ namespace AlgorithmsComplexityEXCEL
             }
         }
 
-        public static void WriteCSV(int n, long seconds)
+        public static void AddCSVLine(int n, long seconds)
         {
-            string csv = n.ToString() + ";" + seconds.ToString() + "\n";
-
-            File.AppendAllText(Path, csv);
+            csv.Append(n.ToString() + ";" + seconds.ToString() + "\n");
         }
     }
 }
