@@ -9,14 +9,14 @@ namespace AlgorithmsComplexityEXCEL
     class Program
     {
         static string Path = Directory.GetCurrentDirectory() + @"\results.csv";
-        const int N = 5;                     //размер графика по оси Х 
+        const int N = 1000;                     //размер графика по оси Х 
         const int repeatNum = 5;                 //количество повторений вычислений для среза выбросов 
         static int[] nums = Logic.GetRndNumbesList(N); //массив случайных чисел 
         static long[] resultX = new long[N];           //массив точек для отрисовки графика 
         static StringBuilder csv = new StringBuilder();
         static void Main(string[] args)
         {
-            Execute(15, N, true);
+            Execute(16, N, true);
 
             File.Delete(Path);
             for (int i = 0; i < N; i++)

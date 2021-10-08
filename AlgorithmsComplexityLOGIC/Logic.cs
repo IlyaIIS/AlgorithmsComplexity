@@ -209,6 +209,12 @@ namespace AlgorithmsComplexityLOGIC
             (int[] array, int count) =>
             {
                 BogoSort(array);
+            },
+            //16 расстояние Хэминга
+            (int[] array, int count) =>
+            {
+                for(int i = 0; i < array.Length; i++)
+                    HammingDistance();
             }
         };
 
@@ -357,6 +363,18 @@ namespace AlgorithmsComplexityLOGIC
                 arr[j] = temp;
             }
             return arr;
+        }
+
+        public static void HammingDistance()
+        {
+            string str1 = rnd.Next(100000, 999999).ToString();
+            string str2 = rnd.Next(100000, 999999).ToString();
+            int count = 0;
+            for(int i = 0; i < str1.Length; i++)
+            {
+                if (str1[i] != str2[i])
+                    count++;
+            }
         }
     }
 
