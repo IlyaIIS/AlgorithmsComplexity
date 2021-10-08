@@ -20,13 +20,13 @@ namespace AlgorithmsComplexityLOGIC
             }
             else
             {
-                for (int i = 1; i < count; i++)
+                for (int i = 3; i < count; i++) //мин длина
                     result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i);
             }
             return result;
         }
 
-        static long GetTimeOfFunctionExecuting(Function function,int[] array, int count)
+        static long GetTimeOfFunctionExecuting(Function function, int[] array, int count)
         {
             int[] nums = new int[count];
             Array.Copy(array, nums, count);
@@ -204,6 +204,11 @@ namespace AlgorithmsComplexityLOGIC
                 for (int i = 0; i<count; i++)
                     str = LGenerator(str, condition1, condition2);
                 str = DeleteConditions(str);
+            },
+            //15 богосорт
+            (int[] array, int count) =>
+            {
+                BogoSort(array);
             }
         };
 
@@ -286,7 +291,7 @@ namespace AlgorithmsComplexityLOGIC
         static string LGenerator(string input, string condition1, string condition2)
         {
             StringBuilder output = new StringBuilder(String.Empty);
-            foreach(var c in input)
+            foreach (var c in input)
             {
                 if (c == 'A')
                 {
@@ -313,19 +318,45 @@ namespace AlgorithmsComplexityLOGIC
             for (int i = 0; i < FS.branchNum; i++)
             {
                 double localAngle = angle - FS.angleDigression + FS.angleInc * i;
-<<<<<<< Updated upstream
-                PointD localPoint = new PointD(point.X + Math.Cos(localAngle) * FS.length, point.Y - Math.Sin(localAngle) * FS.length);
-                //сохранить полученный отрезок (от point до localPoint) в глобальной переменной-массиве
-=======
-                PointD localPoint = new PointD(point.X + Math.Cos(localAngle) * 
+                PointD localPoint = new PointD(point.X + Math.Cos(localAngle) *
                                     FS.length, point.Y - Math.Sin(localAngle) * FS.length);
                 //сохранить полученный отрезок (от point до localPoint)
->>>>>>> Stashed changes
                 if (deph > 0)
                 {
                     DoFractal(localPoint, localAngle, deph - 1);
                 }
             }
+        }
+
+
+        public static void BogoSort(int[] arr)
+        {
+            bool flag = true;
+            while (flag)
+            {
+                arr = Shuffle(arr);
+                for (int i = 1; i < arr.Length; i++)
+                {
+                    if (arr[i - 1] > arr[i])
+                    {
+                        flag = true;
+                        break;
+                    }
+                    flag = false;
+                }
+            }
+        }
+
+        public static int[] Shuffle(int[] arr)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                int j = rnd.Next(arr.Length);
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
         }
     }
 
