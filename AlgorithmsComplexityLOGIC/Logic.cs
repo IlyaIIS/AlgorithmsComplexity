@@ -9,6 +9,7 @@ namespace AlgorithmsComplexityLOGIC
 {
     public static class Logic
     {
+        public static Node RBT = new Node(0, "white");
         delegate void Function(int[] array, int count);
         static Random rnd = new Random();
         public static long[] GetExecutingTimeArray(int funcNum, int[] array, int count, bool isParallelActive)
@@ -229,7 +230,10 @@ namespace AlgorithmsComplexityLOGIC
             //3 <название> - <приемлемое количество итераций>
             (int[] array, int count) =>
             {
-
+                for(int i = 0; i < array.Length; i++)
+                {
+                    Insert(array[i]);
+                }
             },
             //4 <название> - <приемлемое количество итераций>
             (int[] array, int count) =>
@@ -261,6 +265,126 @@ namespace AlgorithmsComplexityLOGIC
                 BitonicSortPacket.Sort(list.ToArray(), 1);
             },
         };
+
+        static void Insert(int key)
+        {
+            Node node = new Node(key, "red", null, null);
+            if (RBT.Parent == null)
+            {
+                node.Color = "black";
+                RBT = node;
+                return;
+            }
+            var parentNode = SearchNull(RBT, key);
+            if (parentNode.Key <= key)
+                parentNode.Left = node;
+            else
+                parentNode.Right = node;
+            node.Parent = parentNode;
+            FixColor(node);
+        }
+
+        static void FixColor(Node node)
+        {
+            while (node != RBT && node.Parent.Color == "red")
+            {
+                if (node.Parent == node.Parent.Parent.Left)
+                {
+                    Node Y = node.Parent.Parent.Right;
+                    if (Y != null && Y.Color == "red")
+                    {
+                        Y.Color = "black";
+                        node = FlipColors(node);
+                        node = node.Parent.Parent;
+                    }
+                    else
+                    {
+                        if (node == node.Parent.Right)
+                        {
+                            node = node.Parent;
+                            RotateLeft(node);
+                        }
+                        node = FlipColors(node);
+                        RotateRight(node.Parent.Parent);
+                    }
+
+                }
+                else
+                {
+                    Node X = null;
+
+                    X = node.Parent.Parent.Left;
+                    if (X != null && X.Color == "black")//Case 1
+                    {
+                        X.Color = "red";
+                        node = FlipColors(node);
+                        node = node.Parent.Parent;
+                    }
+                    else
+                    {
+                        if (node == node.Parent.Left)
+                        {
+                            node = node.Parent;
+                            RotateRight(node);
+                        }
+                        node = FlipColors(node);
+                        RotateLeft(node.Parent.Parent);
+
+                    }
+
+                }
+                RBT.Color = "black";
+            }
+        }
+
+        static Node SearchNull(Node node, int key)
+        {
+            if(node != null)
+            {
+                if (node.Key <= key && node.Left != null)
+                {
+                    SearchNull(node.Left, key);
+                }
+                else if(node.Right != null)
+                {
+                    SearchNull(node.Right, key);
+                }
+            }
+            return node;
+        }
+
+        static Node FlipColors(Node n)
+        {
+            if (n.Parent.Color == "red")
+                n.Parent.Color = "black";
+            else
+                n.Parent.Color = "red";
+            if (n.Parent.Parent.Color == "red")
+                n.Parent.Parent.Color = "black";
+            else
+                n.Parent.Parent.Color = "red";
+            return n;
+        }
+
+        static Node RotateLeft(Node n)
+        {
+            var x = n.Right;
+            n.Right = x.Left;
+            x.Left = n;
+            x.Color = n.Color;
+            n.Color = "red";
+            return x;
+        }
+
+        static Node RotateRight(Node n)
+        {
+            var x = n.Left;
+            n.Left = x.Right;
+            x.Right = n;
+            x.Color = n.Color;
+            n.Color = "red";
+            return x;
+        }
 
         static int[] Qsort(int[] arr, int a, int b)
         {
@@ -438,6 +562,27 @@ namespace AlgorithmsComplexityLOGIC
             Y = y;
         }
     }
+
+    public class Node // класс для представления узлов дерева
+    {
+        public int Key;
+        public string Color = "black";
+        public Node Left = null;
+        public Node Right = null;
+        public Node Parent = null;
+        public Node(int key, string color, Node left, Node right)
+        {
+            Key = key;
+            Color = color;
+            Left = left;
+            Right = right;
+        }
+        public Node(int key, string color)
+        {
+            Key = key;
+            Color = color;
+        }
+    };
 
     static class FS //FractalSettings
     {
