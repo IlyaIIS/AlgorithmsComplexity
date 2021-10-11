@@ -16,12 +16,12 @@ namespace AlgorithmsComplexityLOGIC
             long[] result = new long[count];
             if (isParallelActive)
             {
-                Parallel.For(1, count, (int i) => result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i));
+                Parallel.For(1, count, (int i) => result[i] = GetTimeOfFunctionExecuting(newFunctions[funcNum], array, i));
             }
             else
             {
                 for (int i = 3; i < count; i++) //мин длина
-                    result[i] = GetTimeOfFunctionExecuting(functions[funcNum], array, i);
+                    result[i] = GetTimeOfFunctionExecuting(newFunctions[funcNum], array, i);
             }
             return result;
         }
@@ -205,12 +205,22 @@ namespace AlgorithmsComplexityLOGIC
                     str = LGenerator(str, condition1, condition2);
                 str = DeleteConditions(str);
             },
-            //15 богосорт
+            
+        };
+
+        static List<Function> newFunctions = new List<Function>()
+        {
+            //<номер> <название> - <приемлемое количество итераций>
+            (int[] array, int count) =>
+            {
+
+            },
+            //1 богосорт
             (int[] array, int count) =>
             {
                 BogoSort(array);
             },
-            //16 расстояние Хэминга
+            //2 расстояние Хэминга
             (int[] array, int count) =>
             {
                 for(int i = 0; i < array.Length; i++)

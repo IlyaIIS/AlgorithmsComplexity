@@ -16,7 +16,7 @@ namespace AlgorithmsComplexityEXCEL
         static StringBuilder csv = new StringBuilder();
         static void Main(string[] args)
         {
-            Execute(16, N, true);
+            Execute(2, N, true);
 
             File.Delete(Path);
             for (int i = 0; i < N; i++)
