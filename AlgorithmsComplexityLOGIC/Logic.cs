@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Text;
+using System.Linq;
 
 namespace AlgorithmsComplexityLOGIC
 {
@@ -221,11 +222,11 @@ namespace AlgorithmsComplexityLOGIC
             {
                 BogoSort(array);
             },
-            //2 расстояние Хэминга
+            //2 Алгоритм Хельда – Карпа - 13
             (int[] array, int count) =>
             {
-                for(int i = 0; i < array.Length; i++)
-                    HammingDistance();
+                int[,] matrix = HeldKarpAlgorithmPacket.GenerateMatrix(count);//при финальном замере вынести формирование матрицы наружу!!
+                HeldKarpAlgorithmPacket.GetMinCostRoute(matrix, count);
             },
             //3 <название> - <приемлемое количество итераций>
             (int[] array, int count) =>
@@ -240,10 +241,11 @@ namespace AlgorithmsComplexityLOGIC
             {
 
             },
-            //5 <название> - <приемлемое количество итераций>
+            //5 расстояние Хэминга
             (int[] array, int count) =>
             {
-
+                for(int i = 0; i < array.Length; i++)
+                    HammingDistance();
             },
             //6 битонная сортировка
             (int[] array, int count) =>
@@ -550,6 +552,15 @@ namespace AlgorithmsComplexityLOGIC
             l = r;
             r = temp;
         }
+
+        
+    }
+
+    class RouteNode
+    {
+        public int Value { get; set; }
+        public RouteNode[] ChildNodes { get; set; }
+        public bool Selected { get; set; }
     }
 
     struct PointD
@@ -711,6 +722,52 @@ namespace AlgorithmsComplexityLOGIC
 
             if (dir == k)
                 Logic.Swap(ref arr[i], ref arr[j]);
+        }
+    }
+    static class HeldKarpAlgorithmPacket
+    {
+        static Random rnd = new Random();
+        public static int GetMinCostRoute(int[,] matrix, int count)
+        {
+            List<int> way = Enumerable.Range(0, count).ToList();
+            List<int> subList = new List<int>(way);
+            subList.RemoveAt(0);
+            int cost = GetMinCostRouteRec(matrix, way[0], subList);
+
+            return cost;
+        }
+        static int GetMinCostRouteRec(int[,] matrix, int num, List<int> way)
+        {
+            if (way.Count > 0)
+            {
+                int min = int.MaxValue;
+                for (int i = 0; i < way.Count; i++)
+                {
+                    List<int> subList = new List<int>(way);
+                    subList.RemoveAt(i);
+                    int localCost = matrix[num, way[i]] + GetMinCostRouteRec(matrix, way[i], subList);
+                    if (localCost < min)
+                        min = localCost;
+                }
+                return min;
+            }
+            else
+            {
+                return matrix[num, 0];
+            }
+        }
+        public static int[,] GenerateMatrix(int n)
+        {
+            int[,] matrix = new int[n, n];
+            for (int row = 0; row < n; row++)
+            {
+                for (int column = 0; column < n; column++)
+                {
+                    if (row != column)
+                        matrix[row, column] = rnd.Next();
+                }
+            }
+            return matrix;
         }
     }
 }
