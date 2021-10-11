@@ -21,7 +21,7 @@ namespace AlgorithmsComplexityWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        const int N = 1000;                     //размер графика по оси Х
+        const int N = 5000;                     //размер графика по оси Х
         const int repeatNum = 5;                //количество повторений вычислений для среза выбросов
         int[] nums = Logic.GetRndNumbesList(N); //массив случайных чисел
         Point[] points = new Point[N];          //массив точек для отрисовки графика
@@ -30,7 +30,7 @@ namespace AlgorithmsComplexityWPF
         {
             InitializeComponent();
 
-            Execute(2, N, Brushes.Blue, true);
+            Execute(6, N, Brushes.Blue, true);
         }
 
         void Execute(int funcNum, int N, Brush color, bool showAverage)
@@ -38,7 +38,7 @@ namespace AlgorithmsComplexityWPF
             long[][] results = new long[repeatNum][];
             for (int i = 0; i < repeatNum; i++)
             {
-                results[i] = Logic.GetExecutingTimeArray(funcNum, nums, N, true);
+                results[i] = Logic.GetExecutingTimeArray(funcNum, nums, N, false);
             }
 
             double xStep = (Width * 0.98) / N;

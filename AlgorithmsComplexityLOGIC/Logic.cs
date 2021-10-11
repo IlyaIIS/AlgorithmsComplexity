@@ -225,7 +225,41 @@ namespace AlgorithmsComplexityLOGIC
             {
                 for(int i = 0; i < array.Length; i++)
                     HammingDistance();
-            }
+            },
+            //3 <название> - <приемлемое количество итераций>
+            (int[] array, int count) =>
+            {
+
+            },
+            //4 <название> - <приемлемое количество итераций>
+            (int[] array, int count) =>
+            {
+
+            },
+            //5 <название> - <приемлемое количество итераций>
+            (int[] array, int count) =>
+            {
+
+            },
+            //6 битонная сортировка
+            (int[] array, int count) =>
+            {
+                List<int> list = new List<int>();//при финальном замере вынести формирование листа наружу!!
+                int i = 1;                      
+                while(count > Math.Pow(2,i))
+                {
+                    i++;
+                }
+                for (int ii = 0; ii < Math.Pow(2,i); ii++)
+                {
+                    if (ii < count)
+                        list.Add(array[ii]);
+                    else
+                        list.Add(0);
+			    }
+
+                BitonicSortPacket.Sort(list.ToArray(), 1);
+            },
         };
 
         static int[] Qsort(int[] arr, int a, int b)
@@ -386,6 +420,12 @@ namespace AlgorithmsComplexityLOGIC
                     count++;
             }
         }
+        public static void Swap<T>(ref T l, ref T r)
+        {
+            T temp = l;
+            l = r;
+            r = temp;
+        }
     }
 
     struct PointD
@@ -486,6 +526,46 @@ namespace AlgorithmsComplexityLOGIC
                         Merge(ref arr, left, mid, right);
                 }
             }
+        }
+    }
+    class BitonicSortPacket
+    {
+        /// <param name="dir"> Направление сортировки (1 - возрастание, 0 - убывание)</param>
+        public static void Sort(int[] arr, int dir)
+        {
+            BitonicSort(arr, 0, arr.Length, dir);
+        }
+        /// <summary> Рекурсивно сортирует битоническую последовательность </summary>
+        /// <param name="from"> Начало последовательности для сортировки </param>
+        /// <param name="count"> Количество элементов для сортировки </param>
+        /// <param name="dir"> Направление сортировки (1 - возрастание, 0 - убывание) </param>
+        static void BitonicSort(int[] arr, int from, int count, int dir)
+        {
+            if (count > 1)
+            {
+                BitonicSort(arr, from, count / 2, 1);            
+                BitonicSort(arr, from + count / 2, count / 2, 0);
+                BitonicMerge(arr, from, count, dir);             
+            }
+        }
+
+        static void BitonicMerge(int[] arr, int from, int count, int dir)
+        {
+            if (count > 1)
+            {
+                for (int i = from; i < from + count / 2; i++)
+                    CompAndSwap(arr, i, i + count / 2, dir);
+                BitonicMerge(arr, from, count / 2, dir);
+                BitonicMerge(arr, from + count / 2, count / 2, dir);
+            }
+        }
+
+        static void CompAndSwap(int[] arr, int i, int j, int dir)
+        {
+            int k = (arr[i] > arr[j]) ? 1 : 0;
+
+            if (dir == k)
+                Logic.Swap(ref arr[i], ref arr[j]);
         }
     }
 }
