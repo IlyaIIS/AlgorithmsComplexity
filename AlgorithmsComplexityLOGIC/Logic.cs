@@ -228,7 +228,7 @@ namespace AlgorithmsComplexityLOGIC
                 int[,] matrix = HeldKarpAlgorithmPacket.GenerateMatrix(count);//при финальном замере вынести формирование матрицы наружу!!
                 HeldKarpAlgorithmPacket.GetMinCostRoute(matrix, count);
             },
-            //3 <название> - <приемлемое количество итераций>
+            //3 <Red-black tree, insert> - 10000
             (int[] array, int count) =>
             {
                 for(int i = 0; i < array.Length; i++)
@@ -236,10 +236,24 @@ namespace AlgorithmsComplexityLOGIC
                     Insert(array[i]);
                 }
             },
-            //4 <название> - <приемлемое количество итераций>
+            //4 GnomeSort - 2000
             (int[] array, int count) =>
             {
-
+                int position = 0;
+                while(position < array.Length)
+                {
+                    if(position == 0 || array[position] >= array[position - 1])
+                    {
+                        position++;
+                    }
+                    else
+                    {
+                        int temp = array[position];
+                        array[position] = array[position - 1];
+                        array[position - 1] = temp;
+                        position--;
+                    }
+                }
             },
             //5 расстояние Хэминга
             (int[] array, int count) =>
